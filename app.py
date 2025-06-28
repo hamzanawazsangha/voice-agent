@@ -46,7 +46,7 @@ def load_vectorstore():
     return vectorstore.as_retriever()
 
 # ------------------ LLM QA Chain ------------------ #
-@st.cache_resource@st.cache_resource
+@st.cache_resource
 def load_qa_chain():
     llm = HuggingFaceEndpoint(
         repo_id="mistralai/Mistral-7B-Instruct-v0.1",
@@ -55,7 +55,6 @@ def load_qa_chain():
     )
     retriever = load_vectorstore()
     return RetrievalQA.from_chain_type(llm=llm, retriever=retriever)
-
 # ------------------ Load Resources ------------------ #
 model = load_whisper_model()
 qa_chain = load_qa_chain()
