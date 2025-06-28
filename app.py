@@ -11,6 +11,8 @@ from langchain.chains import RetrievalQA
 from langchain_community.document_loaders import TextLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.llms import Transformers
+from langchain.llms import HuggingFacePipeline
+from transformers import pipeline
 
 # ------------------ Streamlit Page Config ------------------ #
 st.set_page_config(page_title="🎤 Voice Chat AI", layout="centered")
@@ -47,7 +49,8 @@ def load_vectorstore():
 # ------------------ LLM QA Chain ------------------ #
 @st.cache_resource
 def load_qa_chain():
-    llm = Transformers(model_name="TinyLlama/TinyLlama-1.1B-Chat-v1.0")
+    pipe = pipeline("text-generation", model="TinyLlama/TinyLlama-1.1B-Chat-v1.0")
+    llm = HuggingFacePipeline(pipeline=pipe)
     retriever = load_vectorstore()
     return RetrievalQA.from_chain_type(llm=llm, retriever=retriever)
 
