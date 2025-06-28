@@ -7,6 +7,8 @@ from langchain_community.vectorstores import FAISS
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain.chains import RetrievalQA
 from langchain_community.llms import HuggingFaceHub
+from langchain_community.document_loaders import TextLoader
+from langchain.text_splitter import RecursiveCharacterTextSplitter
 
 # Page settings
 st.set_page_config(page_title="🎤 Voice Chat AI", layout="centered")
@@ -15,6 +17,22 @@ st.markdown("Talk to your assistant using your microphone. Ask any question from
 
 # Load Whisper model once
 @st.cache_resource
+@st.cache_resource
+def load_or_build_vectorstore():
+    if os.path.exists("faiss_index/index.faiss"):
+        return FAISS.load_local("faiss_index", embedding).as_retriever()
+    
+    loader = TextLoader("arslan_faqs.txt")
+    docs = loader.load()
+
+    splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
+    splits = splitter.split_documents(docs)
+
+    vectorstore = FAISS.from_documents(splits, embedding)
+    vectorstore.save_local("faiss_index")
+
+    return vectorstore.as_retriever()
+    
 def load_whisper_model():
     return whisper.load_model("base")
 
