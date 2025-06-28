@@ -48,7 +48,7 @@ def load_vectorstore():
 # ------------------ LLM QA Chain ------------------ #
 @st.cache_resource
 def load_qa_chain():
-    llm = HuggingFaceEndpoint(
+    llm = HuggingFaceHub(
         repo_id="google/flan-t5-small",
         temperature=0.5,
         max_new_tokens=512
