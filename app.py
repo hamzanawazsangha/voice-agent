@@ -10,7 +10,7 @@ from langchain_huggingface import HuggingFaceEmbeddings
 from langchain.chains import RetrievalQA
 from langchain_community.document_loaders import TextLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from transformers import pipeline
+from langchain_community.llms import Transformers
 
 # ------------------ Streamlit Page Config ------------------ #
 st.set_page_config(page_title="🎤 Voice Chat AI", layout="centered")
@@ -47,9 +47,9 @@ def load_vectorstore():
 # ------------------ LLM QA Chain ------------------ #
 @st.cache_resource
 def load_qa_chain():
-    llm_pipeline = pipeline("text-generation", model="TinyLlama/TinyLlama-1.1B-Chat-v1.0")
+    llm = Transformers(model_name="TinyLlama/TinyLlama-1.1B-Chat-v1.0")
     retriever = load_vectorstore()
-    return RetrievalQA.from_chain_type(llm=llm_pipeline, retriever=retriever)
+    return RetrievalQA.from_chain_type(llm=llm, retriever=retriever)
 
 # ------------------ Load Resources ------------------ #
 model = load_whisper_model()
@@ -60,18 +60,15 @@ st.subheader("🎙️ Record Your Question")
 audio = mic_recorder(start_prompt="🎤 Start Recording", stop_prompt="⏹️ Stop Recording", just_once=True, key="recorder")
 
 if audio:
-    # Save and play audio
     with open("query.wav", "wb") as f:
         f.write(audio["bytes"])
     st.audio("query.wav", format="audio/wav")
 
-    # Transcribe
     st.info("🔎 Transcribing your voice...")
     result = model.transcribe("query.wav")
     query = result["text"]
     st.success(f"🗣️ You said: {query}")
 
-    # Get Answer
     st.info("💬 Generating response from your data...")
     response = qa_chain.run(query)
     st.success("✅ Response ready!")
@@ -79,7 +76,6 @@ if audio:
     st.subheader("🤖 Answer:")
     st.markdown(f"**{response}**")
 
-    # Text-to-Speech
     tts = gTTS(response)
     tts_audio = BytesIO()
     tts.write_to_fp(tts_audio)
