@@ -8,10 +8,9 @@ import os
 from langchain_community.vectorstores import FAISS
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain.chains import RetrievalQA
-from langchain_community.llms import HuggingFaceHub
 from langchain_community.document_loaders import TextLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_huggingface import HuggingFaceEndpoint
+from transformers import pipeline
 
 # ------------------ Streamlit Page Config ------------------ #
 st.set_page_config(page_title="🎤 Voice Chat AI", layout="centered")
@@ -48,13 +47,10 @@ def load_vectorstore():
 # ------------------ LLM QA Chain ------------------ #
 @st.cache_resource
 def load_qa_chain():
-    llm = HuggingFaceEndpoint(
-        repo_id="TinyLlama/TinyLlama-1.1B-Chat-v1.0",
-        temperature=0.5,
-        max_new_tokens=512
-    )
+    llm_pipeline = pipeline("text-generation", model="TinyLlama/TinyLlama-1.1B-Chat-v1.0")
     retriever = load_vectorstore()
-    return RetrievalQA.from_chain_type(llm=llm, retriever=retriever)
+    return RetrievalQA.from_chain_type(llm=llm_pipeline, retriever=retriever)
+
 # ------------------ Load Resources ------------------ #
 model = load_whisper_model()
 qa_chain = load_qa_chain()
