@@ -49,7 +49,7 @@ def load_vectorstore():
 @st.cache_resource
 def load_qa_chain():
     llm = HuggingFaceEndpoint(
-        repo_id="google/flan-t5-small",
+        repo_id="mistralai/Mistral-7B-Instruct-v0.2",
         temperature=0.5,
         max_new_tokens=512
     )
