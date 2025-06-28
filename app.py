@@ -49,7 +49,7 @@ def load_vectorstore():
 @st.cache_resource
 def load_qa_chain():
     llm = HuggingFaceEndpoint(
-        repo_id="google/flan-t5-larg",
+        repo_id="google/flan-t5-large",
         temperature=0.5,
         max_new_tokens=512
     )
