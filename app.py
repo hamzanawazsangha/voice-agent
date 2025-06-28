@@ -49,7 +49,7 @@ def load_vectorstore():
 # ------------------ LLM QA Chain ------------------ #
 @st.cache_resource
 def load_qa_chain():
-    pipe = pipeline("text-generation", model="TinyLlama/TinyLlama-1.1B-Chat-v1.0")
+    pipe = pipeline("text-generation", model="google/flan-t5-small")
     llm = HuggingFacePipeline(pipeline=pipe)
     retriever = load_vectorstore()
     return RetrievalQA.from_chain_type(llm=llm, retriever=retriever)
