@@ -10,7 +10,7 @@ from langchain_huggingface import HuggingFaceEmbeddings
 from langchain.chains import RetrievalQA
 from langchain_community.document_loaders import TextLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_community.llms import Transformers
+# from langchain_community.llms import Transformers
 from langchain.llms import HuggingFacePipeline
 from transformers import pipeline
 
