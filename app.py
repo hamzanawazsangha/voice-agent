@@ -49,7 +49,7 @@ def load_vectorstore():
 # ------------------ LLM QA Chain ------------------ #
 @st.cache_resource
 def load_qa_chain():
-    pipe = pipeline("text2text-generation", model="google/flan-t5-small")
+    pipe = pipeline("text2text-generation", model="google/flan-t5-base")
     llm = HuggingFacePipeline(pipeline=pipe)
     retriever = load_vectorstore()
     prompt_template = PromptTemplate(
