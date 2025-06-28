@@ -49,7 +49,7 @@ def load_vectorstore():
 @st.cache_resource
 def load_qa_chain():
     llm = HuggingFaceEndpoint(
-        repo_id="meta-llama/Llama-3.1-8B-Instruct",
+        repo_id="distilbert/distilgpt2",
         temperature=0.5,
         max_new_tokens=512
     )
