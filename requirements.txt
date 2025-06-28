@@ -1,5 +1,5 @@
 streamlit
-streamlit-webrtc
+streamlit-webrtc==0.46.1
 openai-whisper
 gTTS
 requests
@@ -7,3 +7,4 @@ faiss-cpu
 sentence-transformers
 langchain
 langchain-community
+langchain-huggingface
