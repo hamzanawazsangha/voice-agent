@@ -10,9 +10,9 @@ from langchain_huggingface import HuggingFaceEmbeddings
 from langchain.chains import RetrievalQA
 from langchain_community.document_loaders import TextLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-# from langchain_community.llms import Transformers
 from langchain.llms import HuggingFacePipeline
 from transformers import pipeline
+from langchain.prompts import PromptTemplate
 
 # ------------------ Streamlit Page Config ------------------ #
 st.set_page_config(page_title="🎤 Voice Chat AI", layout="centered")
@@ -49,10 +49,25 @@ def load_vectorstore():
 # ------------------ LLM QA Chain ------------------ #
 @st.cache_resource
 def load_qa_chain():
-    pipe = pipeline("text-generation", model="google/flan-t5-small")
+    pipe = pipeline("text2text-generation", model="google/flan-t5-small")
     llm = HuggingFacePipeline(pipeline=pipe)
     retriever = load_vectorstore()
-    return RetrievalQA.from_chain_type(llm=llm, retriever=retriever)
+    prompt_template = PromptTemplate(
+        input_variables=["context", "question"],
+        template="""
+        Use the following context to answer the question.
+        Context: {context}
+        
+        Question: {question}
+        Answer:
+        """
+    )
+    return RetrievalQA.from_chain_type(
+        llm=llm,
+        retriever=retriever,
+        chain_type="stuff",
+        chain_type_kwargs={"prompt": prompt_template}
+    )
 
 # ------------------ Load Resources ------------------ #
 model = load_whisper_model()
