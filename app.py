@@ -49,7 +49,7 @@ def load_vectorstore():
 @st.cache_resource
 def load_qa_chain():
     llm = HuggingFaceEndpoint(
-        repo_id="HuggingFaceH4/zephyr-7b-beta",
+        repo_id="tencent/Hunyuan-A13B-Instruct",
         temperature=0.5,
         max_new_tokens=512
     )
