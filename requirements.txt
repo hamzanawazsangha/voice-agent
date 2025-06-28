@@ -1,0 +1,9 @@
+streamlit
+streamlit-webrtc
+openai-whisper
+gTTS
+requests
+faiss-cpu
+sentence-transformers
+langchain
+langchain-community
